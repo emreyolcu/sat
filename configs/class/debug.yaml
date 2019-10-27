@@ -1,0 +1,15 @@
+name: class/debug
+seed: 1
+
+log_level: info
+report_interval: 1
+no_dev: True
+
+data_path: data/debug
+
+gnn_hidden_size: 16
+readout_hidden_size: 64
+
+epochs: 100
+batch_size: 10
+lr: 0.01

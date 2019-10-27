@@ -1,0 +1,36 @@
+name: search/rand/10_lr1e-4
+seed: 1
+
+log_level: info
+report_interval: 10
+eval_interval: 50
+save_interval: 50
+
+data_path: data/rand
+train_sets:
+  - name: 10-43
+    samples: 2000
+    max_tries: 5
+    max_flips: 100
+    iterations: 10000
+
+eval_set:
+  name: 25-106
+  samples: 10
+  max_tries: 10
+  max_flips: 500
+
+model_path: results/search/rand/5/model_last.pth
+
+gnn_hidden_size: 32
+readout_hidden_size: 64
+
+cycles: 1
+optimizer: RMSprop
+lr: 0.0001
+lr_milestones: [200, 500, 1000, 5000]
+lr_decay: 1.0
+
+method: reinforce
+discount: 0.25
+walk_prob: 0.5

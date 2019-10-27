@@ -1,0 +1,45 @@
+name: search/debug/debug_4
+seed: 1
+
+log_level: info
+report_interval: 10
+eval_interval: 50
+save_interval: 50
+eval_multi: False
+
+data_path: data/domset
+data_shuffle: False
+train_sets:
+  - name: 2-5-0.2
+    samples: 2000
+    max_tries: 5
+    max_flips: 150
+    iterations: 10000
+
+eval_set:
+  name: 3-7-0.2
+  samples: 10
+  max_tries: 25
+  max_flips: 200
+
+model_path: False
+load_with_noise: False
+
+gnn_hidden_size: 32
+gnn_iter: 2
+gnn_async: False
+readout_hidden_size: 64
+
+mlp_arch:
+  hidden_sizes: [32, 32, 32]
+  activation: ReLU
+
+cycles: 1
+optimizer: RMSprop
+lr: 0.0005
+lr_milestones: [200, 500, 1000, 5000]
+lr_decay: 0.5
+
+method: pg
+discount: 0.25
+walk_prob: 0.5

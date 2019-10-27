@@ -1,0 +1,50 @@
+name: search/rand/end
+seed: 1
+
+log_level: info
+report_interval: 10
+eval_interval: 1000
+save_interval: 50
+
+data_path: data/rand
+train_sets:
+  - name: 5-21
+    samples: 1000
+    max_tries: 10
+    max_flips: 50
+    iterations: 1000
+  - name: 10-43
+    samples: 1000
+    max_tries: 10
+    max_flips: 100
+    iterations: 1000
+  - name: 25-106
+    samples: 1000
+    max_tries: 10
+    max_flips: 500
+    iterations: 1000
+  - name: 50-213
+    samples: 1000
+    max_tries: 10
+    max_flips: 1500
+    iterations: 1000
+
+eval_set:
+  name: 50-213
+  samples: 5
+  max_tries: 5
+  max_flips: 1500
+
+model_path: False
+
+gnn_hidden_size: 128
+readout_hidden_size: 128
+
+cycles: 1
+optimizer: RMSprop
+lr: 0.0001
+lr_milestones: [1000, 2500, 5000]
+lr_decay: 0.5
+
+method: reinforce
+discount: 0.25

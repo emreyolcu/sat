@@ -1,0 +1,32 @@
+name: search/kclique/20
+seed: 1
+
+log_level: info
+report_interval: 10
+eval_interval: 50
+save_interval: 50
+
+data_path: data/kclique
+train_sets:
+  - name: 20-0.05
+    samples: 2000
+    max_tries: 5
+    max_flips: 300
+    iterations: 10000
+
+eval_set: False
+
+model_path: results/search/kclique/15/model_best.pth
+
+gnn_hidden_size: 32
+readout_hidden_size: 64
+
+cycles: 1
+optimizer: RMSprop
+lr: 0.0001
+lr_milestones: [200, 500, 1000, 5000]
+lr_decay: 0.8
+
+method: reinforce
+discount: 0.25
+walk_prob: 0.5
