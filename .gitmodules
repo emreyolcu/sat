@@ -1,6 +1,6 @@
 [submodule "code/PyMiniSolvers"]
 	path = code/PyMiniSolvers
 	url = https://github.com/liffiton/PyMiniSolvers.git
-[submodule "cnfgen"]
+[submodule "code/cnfgen"]
 	path = code/cnfgen
 	url = https://github.com/dselsam/cnfgen
