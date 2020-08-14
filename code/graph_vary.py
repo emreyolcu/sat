@@ -10,8 +10,8 @@ import networkx as nx
 def create_sat_problem(filename, problem, graph_generator, k):
     while True:
         nx.write_gml(graph_generator(), 'tmp.gml')
-        subprocess.call(['cnfgen', '-q', '-o', 'tmp.cnf', problem, '--input', 'tmp.gml', str(k)] +
-                        (['0'] if problem == 'kcolor' else []))
+        subprocess.call(['cnfgen', '-q', '-o', 'tmp.cnf', problem, '--input', 'tmp.gml', str(k)])
+
         try:
             subprocess.check_call(['minisat', 'tmp.cnf'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as ex:
