@@ -52,16 +52,16 @@ class GraphConv(nn.Module):
         xev, xec = data.x[2:]
         # mv = torch.spmm(vadj, self.fmv(torch.cat((hc.repeat(2, 1), xec), dim=1)))
         # mc = torch.spmm(cadj, self.fmc(torch.cat((hv.repeat(2, 1), xev), dim=1)))
-        # mv = torch.spmm(vadj, torch.cat([self.fmv_pos(hc.clone()), self.fmv_neg(hc.clone())], dim=0))
-        # mc = torch.spmm(cadj, torch.cat([self.fmc_pos(hv.clone()), self.fmc_neg(hv.clone())], dim=0))
-        m1 = self.fmv_pos(hc)
-        m2 = self.fmv_neg(hc)
-        a = torch.cat([m1, m2], dim=0)
-        mv = torch.spmm(vadj, a)
-        m3 = self.fmc_pos(hv)
-        m4 = self.fmc_neg(hv)
-        b = torch.cat([m3, m4], dim=0)
-        mc = torch.spmm(cadj, b)
+        mv = torch.spmm(vadj, torch.cat([self.fmv_pos(hc.clone()), self.fmv_neg(hc.clone())], dim=0))
+        mc = torch.spmm(cadj, torch.cat([self.fmc_pos(hv.clone()), self.fmc_neg(hv.clone())], dim=0))
+        # m1 = self.fmv_pos(hc)
+        # m2 = self.fmv_neg(hc)
+        # a = torch.cat([m1, m2], dim=0)
+        # mv = torch.spmm(vadj, a)
+        # m3 = self.fmc_pos(hv)
+        # m4 = self.fmc_neg(hv)
+        # b = torch.cat([m3, m4], dim=0)
+        # mc = torch.spmm(cadj, b)
         return mv, mc
 
     def update(self, h, m):

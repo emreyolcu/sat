@@ -3,7 +3,7 @@ import logging
 import os
 import pdb
 import random
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from os.path import join
 
 import numpy as np
@@ -50,6 +50,7 @@ def setup():
 
     config['no_eval'] = not config['eval_set']
 
+    config = defaultdict(lambda: None, config)
     return config, device
 
 

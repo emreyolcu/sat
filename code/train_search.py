@@ -4,6 +4,7 @@ import pdb
 import pickle
 import random
 from os.path import join
+from importlib import import_module
 
 import numpy as np
 import torch
@@ -15,7 +16,7 @@ from torch.multiprocessing import Process
 import evaluate
 import util
 from data_search import load_dir
-from gnn import A2CPolicy, ReinforcePolicy, PGPolicy
+# from gnn import A2CPolicy, ReinforcePolicy, PGPolicy
 from search import LocalSearch
 from util import normalize
 
@@ -156,6 +157,7 @@ def generate_episodes(ls, sample, max_tries, max_flips, config):
 
     for _ in range(max_tries):
         sat, flip, history = ls.generate_episode(sample, max_flips, config['walk_prob'])
+        flip = flip[0]
         if sat and flip > 0 and not all(map(lambda x: x is None, history[0])):
             losses.append(loss_fn(sat, history, config))
         flips.append(flip)
@@ -193,7 +195,7 @@ def eval(ls, eval_set, config):
         fp = ([], [], [], [])
         for sample in eval_set['data']:
             if config['eval_multi']:
-                flips = evaluate.generate_episodes(ls, sample, eval_set['max_tries'], eval_set['max_flips'], config['walk_prob'], False)
+                flips = evaluate.generate_episodes(ls, sample, eval_set['max_tries'], eval_set['max_flips'], config['walk_prob'], False)[0]
             else:
                 _, flips = generate_episodes(ls, sample, eval_set['max_tries'], eval_set['max_flips'], config)
             flip_update(fp, flips, eval_set['max_flips'])
@@ -275,15 +277,16 @@ def train(ls, optimizer, scheduler, data, config):
 def main():
     config, device = util.setup()
     logger.setLevel(getattr(logging, config['log_level'].upper()))
+    gnn = import_module('gnn' if config['mlp_arch'] else 'gnn_old')
 
     if config['method'] == 'reinforce':
-        model = ReinforcePolicy
+        model = gnn.ReinforcePolicy
     elif config['method'] == 'reinforce_multi':
-        model = ReinforcePolicy
+        model = gnn.ReinforcePolicy
     elif config['method'] == 'pg':
-        model = PGPolicy
+        model = gnn.PGPolicy
     elif config['method'] == 'a2c':
-        model = A2CPolicy
+        model = gnn.A2CPolicy
 
     if config['model_path']:
         logger.info('Loading model parameters from {}'.format(config['model_path']))
@@ -296,8 +299,11 @@ def main():
                 for p in policy.policy_readout.parameters():
                     p.add_(torch.randn(p.size()) * 0.1)
     else:
-        policy = model(3, config['gnn_hidden_size'], config['readout_hidden_size'],
-                       config['mlp_arch'], config['gnn_iter'], config['gnn_async']).to(device)
+        if config['mlp_arch']:
+            policy = model(3, config['gnn_hidden_size'], config['readout_hidden_size'],
+                           config['mlp_arch'], config['gnn_iter'], config['gnn_async']).to(device)
+        else:
+            policy = model(3, config['gnn_hidden_size'], config['readout_hidden_size']).to(device)
     optimizer = getattr(optim, config['optimizer'])(policy.parameters(), lr=config['lr'])
     scheduler = optim.lr_scheduler.MultiStepLR(
         optimizer, milestones=config['lr_milestones'], gamma=config['lr_decay']

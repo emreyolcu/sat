@@ -1,0 +1,9 @@
+name: cnfgen
+channels:
+  - conda-forge
+dependencies:
+  - python=2.7
+  - networkx
+  - pip
+  - pip:
+    - code/cnfgen
